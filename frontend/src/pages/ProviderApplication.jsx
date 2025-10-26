@@ -101,7 +101,7 @@ const ProviderApplicationPage = () => {
               className="w-full p-2 rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             ></textarea>
           </div>
-
+          
           {/* Experience */}
           <div>
             <label className="block mb-1 font-medium">Experience (Years)</label>

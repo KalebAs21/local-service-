@@ -23,7 +23,7 @@ const LoginPopup = ({ setShowLogin }) => {
   const onLogin = async (event) => {
     event.preventDefault();
 
-    // compute URL & payload depending on current state
+    // Compute URL & payload depending on current state
     let newUrl = url;
     let payload = {};
 
@@ -40,11 +40,9 @@ const LoginPopup = ({ setShowLogin }) => {
         email: data.email,
         password: data.password,
       };
-
     }
-     
 
-    // debug logs (remove in production)
+    // Debug logs (remove in production)
     console.log("Calling:", newUrl);
     console.log("Payload:", payload);
 
@@ -53,22 +51,45 @@ const LoginPopup = ({ setShowLogin }) => {
         headers: { "Content-Type": "application/json" },
       });
 
+      console.log("Response:", response.data); // ← Add this to see what backend sends
+
       if (response?.data?.success) {
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token);
+        const { token, user } = response.data;
+
+        // ✅ Store token
+        setToken(token);
+        localStorage.setItem("token", token);
+
+        // ✅ Store user object
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // ✅ Set Authorization header for future requests
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        // ✅ Close login popup
         setShowLogin(false);
+
+        // ✅ Navigate based on role (INSIDE success check!)
+        if (user.role === "provider") {
+          navigate("/provider-dashboard");
+        }  else {
+          navigate("/browseservices");
+        }
+
+        console.log("Login successful! Token stored:", token);
       } else {
-        // backend returned success: false
-        alert(response?.data?.message || "Request completed but failed.");
+        // Backend returned success: false
+        alert(response?.data?.message || "Login failed. Please try again.");
       }
-      navigate("/browseservices");
     } catch (error) {
       console.error("Auth error:", error);
+      
       // Show backend message if available
       const msg =
         error?.response?.data?.message ||
         error?.message ||
-        "Something went wrong. Check server logs.";
+        "Something went wrong. Please check your credentials.";
+      
       alert(msg);
     }
   };
@@ -141,7 +162,7 @@ const LoginPopup = ({ setShowLogin }) => {
 
         {/* Terms */}
         <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <input type="checkbox" className="mt-1" />
+          <input type="checkbox" className="mt-1" required />
           <p>
             By continuing, I agree to the{" "}
             <span className="text-primary">Terms of Use</span> and{" "}

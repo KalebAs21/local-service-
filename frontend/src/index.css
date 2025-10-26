@@ -77,4 +77,28 @@
   padding: 0;
   text-align: center;
 }
+/* === Color Utility Classes === */
+.bg-color-background {
+  background-color: hsl(var(--background));
+}
+
+.text-color-foreground {
+  color: hsl(var(--foreground));
+}
+
+.bg-color-card {
+  background-color: hsl(var(--card));
+}
+
+.border-color-border {
+  border-color: hsl(var(--border));
+}
+
+.bg-color-primary {
+  background-color: hsl(var(--primary));
+}
+
+.text-color-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
 
