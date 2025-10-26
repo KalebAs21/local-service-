@@ -1,51 +1,36 @@
-import Service from "../models/serviceModel.js"; // make sure this file exists
+// backend/controllers/serviceController.js
+import Service from "../models/serviceModel.js";
 
-// Create a new service
 const createService = async (req, res) => {
   try {
-    const { title, description, price, category } = req.body;
-
-    const newService = new Service({
-      providerId: req.user.id, // assuming you have user auth middleware
-      title,
-      description,
-      price,
-      category,
-    });
-
-    await newService.save();
-    res.json({ success: true, message: "Service created successfully.", service: newService });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { name, description, price, category } = req.body;
+    const service = await Service.create({ name, description, price, category });
+    res.status(201).json({ success: true, service });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// Get all services
 const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().populate("providerId", "fullName"); // optional: populate provider info
-    res.json(services);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const services = await Service.find();
+    res.json({ success: true, services });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// Get a single service by ID
-const getServiceById = async (req, res) => {
+const deleteService = async (req, res) => {
   try {
-    const service = await Service.findById(req.params.id).populate("providerId", "fullName");
-    if (!service) {
-      return res.status(404).json({ message: "Service not found" });
-    }
-    res.json(service);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const service = await Service.findByIdAndDelete(req.params.id);
+    if (!service) return res.status(404).json({ success: false, message: "Not found" });
+    res.json({ success: true, message: "Deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// ✅ default export
-export default {
-  createService,
-  getAllServices,
-  getServiceById,
-};
+export default { createService, getAllServices, deleteService };

@@ -8,4 +8,7 @@ const router = express.Router();
 router.post("/apply", protect,  applicationController.applyForProvider);
 router.get("/my-application", applicationController.getMyApplication);
 
+// router.post("/add/skill", protect, applicationController.addSkill);
+// router.post("/remove/skill", protect, applicationController.removeSkill);
+
 export default router;

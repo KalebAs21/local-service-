@@ -1,7 +1,8 @@
+// backend/routes/adminRoutes.js
 import express from "express";
 import adminController from "../controllers/adminController.js";
-import  verifyToken  from "../middleware/authMiddleware.js"; // your token middleware
-import  checkRole   from "../middleware/roleMiddleware.js"; // require admin
+import verifyToken from "../middleware/authMiddleware.js";
+import checkRole from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
