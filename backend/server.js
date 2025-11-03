@@ -19,11 +19,13 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello from the backend! at 5000");
 });
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 connectDb();
 //endpoints
 app.use("/api/user", userRouter);
 app.use("/api/provider", providerRouter)
+app.use("/images", express.static("uploads"))
 app.use("/api/service", serviceRouter);
 app.use("/api/admin", adminRouter);
 
